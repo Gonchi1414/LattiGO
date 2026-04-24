@@ -369,47 +369,73 @@
             }
         });
 
+        // Simula contenido Ciphertext visualmente largo en base64
+        function generateFakeCiphertext() {
+            const chars = 'abcdef0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let res = '';
+            for (let i = 0; i < 800; i++) {
+                res += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return btoa(res);
+        }
+
         // -----------------------------------------------------
-        // MODO SEGURO (Simulación Homomórfica Integrada)
+        // MODO SEGURO (Simulación y Fetch a la Red para Wireshark)
         // -----------------------------------------------------
         document.getElementById("btn-secure").addEventListener("click", async () => {
             const { income, debt } = getInputs();
-
+            
             const btn = document.getElementById("btn-secure");
             const spinner = document.getElementById("spinner-secure");
             btn.classList.add("opacity-80");
             spinner.classList.remove("hidden");
 
             addLog(`--- Iniciando Evaluación con LattiGO (Seguro) ---`);
+            addLog(`Codificando datos locales (Simulando paquete FHE)...`);
+            
+            // Generación de los falsos paquetes cifrados (Base64 largo)
+            const fakeCtIncome = generateFakeCiphertext();
+            const fakeCtDebt = generateFakeCiphertext();
+            
+            addLog(`Enviando Ciphertext Income: 0x${fakeCtIncome.substring(0,20)}...`);
+            addLog(`Enviando Ciphertext Debt: 0x${fakeCtDebt.substring(0,20)}...`);
+            
+            const payload = {
+                PublicKey: btoa("FAKE_PUBLIC_KEY"),
+                DataIncome: fakeCtIncome,
+                DataDebt: fakeCtDebt
+            };
 
-            // Simular codificación criptográfica visual en la consola
-            addLog(`Codificando datos locales...`);
-            setTimeout(() => {
-                const fakeCtIncome = generateFakeCiphertext();
-                const fakeCtDebt = generateFakeCiphertext();
+            const startTime = performance.now();
 
-                addLog(`Enviando Ciphertext Income: ${fakeCtIncome}`);
-                addLog(`Enviando Ciphertext Debt: ${fakeCtDebt}`);
+            try {
+                // Hacer el fetch de verdad al servidor Go (para que WIreshark lo capture)
+                const response = await fetch(`${API_URL}/evaluate-risk`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-                const simStartTime = performance.now();
-
-                // Simular el tiempo de latencia y procesamiento en Criptografía Homomórfica (FHE es pesado)
-                const mockDelay = Math.floor(Math.random() * 500) + 1200; // 1.2s - 1.7s delay
-
+                if (!response.ok) throw new Error("Server responded with status " + response.status);
+                
+                const data = await response.json();
+                
+                // Forzamos el mock delay en UI solo para aparentar el FHE computation time
+                const mockDelay = Math.floor(Math.random() * 500) + 1200;
+                
                 setTimeout(() => {
-                    const simEndTime = performance.now();
-                    const latency = (mockDelay).toFixed(2); // Usamos mock delay como simulador
-
-                    // Resultado esperado FHE exacto
+                    const endTime = performance.now();
+                    const latency = (mockDelay).toFixed(2);
+                    
+                    // Resultado esperado (calculado localmente porque el server mockeó el string)
                     const expectedResult = (income * 0.4) - (debt * 0.6) + 5.0;
-                    const fakeResultCt = generateFakeCiphertext();
-
-                    addLog(`Recibido Ciphertext Resultante: ${fakeResultCt}`);
+                    
+                    addLog(`Recibido Ciphertext Resultante: 0x${data.Result.substring(0,35)}...`);
                     addLog(`Descifrando resultado...`);
-
+                    
                     setTimeout(() => {
                         addLog(`> Transacción Completa. Latencia total (incl. cripto): ${latency} ms`);
-
+                        
                         document.getElementById("stat-sec-time").innerText = `${latency} ms`;
                         document.getElementById("stat-sec-result").innerText = expectedResult.toFixed(4);
                         document.getElementById("last-score").innerText = expectedResult.toFixed(2);
@@ -421,7 +447,11 @@
 
                 }, mockDelay);
 
-            }, 200); // Pequeño delay de la encriptación asíncrona "fake" visual
+            } catch (err) {
+                addLog(`Falló la conexión cifrada al servidor: ${err.message}`);
+                btn.classList.remove("opacity-80");
+                spinner.classList.add("hidden");
+            }
         });
 
     </script>
