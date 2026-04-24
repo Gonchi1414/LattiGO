@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,10 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -34,10 +36,10 @@
     <style>
         body {
             background-color: #0B0F19;
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.2) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.2) 0, transparent 50%);
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 0.2) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 0.2) 0, transparent 50%);
             background-attachment: fixed;
             color: #F8FAFC;
         }
@@ -58,10 +60,11 @@
             overflow-y: auto;
             scroll-behavior: smooth;
         }
-        
+
         .log-console::-webkit-scrollbar {
             width: 8px;
         }
+
         .log-console::-webkit-scrollbar-thumb {
             background: #333;
             border-radius: 4px;
@@ -97,8 +100,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Input styling */
@@ -109,6 +117,7 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
     <!-- Navbar / Header -->
@@ -119,27 +128,32 @@
                 <span class="gradient-text">LattiGO</span> Dashboard
             </h1>
             <div class="text-sm font-medium text-gray-400 bg-brand-dark px-4 py-2 rounded-full border border-gray-800">
-                <i class="fa-solid fa-server mr-2 text-green-400"></i> Backend Status: <span class="text-white">Active</span>
+                <i class="fa-solid fa-server mr-2 text-green-400"></i> Backend Status: <span
+                    class="text-white">Active</span>
             </div>
         </div>
     </header>
 
     <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
-        
+
         <!-- Left Column: Inputs & Actions -->
         <div class="lg:col-span-5 space-y-6">
-            
+
             <div class="glass rounded-2xl p-8">
-                <h2 class="text-xl font-semibold mb-6 text-gray-200 border-b border-gray-700 pb-3">Parámetros del Cliente</h2>
-                
+                <h2 class="text-xl font-semibold mb-6 text-gray-200 border-b border-gray-700 pb-3">Parámetros del
+                    Cliente</h2>
+
                 <div class="space-y-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2" for="income">Ingresos Mensuales (USD)</label>
+                        <label class="block text-sm font-medium text-gray-400 mb-2" for="income">Ingresos Mensuales
+                            (USD)</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <span class="text-gray-500">$</span>
                             </div>
-                            <input type="number" id="income" value="5000" class="w-full bg-gray-900 border border-gray-700 rounded-lg py-3 pl-8 pr-4 text-white placeholder-gray-500 transition-colors" placeholder="Ej. 5000">
+                            <input type="number" id="income" value="5000"
+                                class="w-full bg-gray-900 border border-gray-700 rounded-lg py-3 pl-8 pr-4 text-white placeholder-gray-500 transition-colors"
+                                placeholder="Ej. 5000">
                         </div>
                     </div>
 
@@ -149,19 +163,23 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <span class="text-gray-500">$</span>
                             </div>
-                            <input type="number" id="debt" value="2000" class="w-full bg-gray-900 border border-gray-700 rounded-lg py-3 pl-8 pr-4 text-white placeholder-gray-500 transition-colors" placeholder="Ej. 2000">
+                            <input type="number" id="debt" value="2000"
+                                class="w-full bg-gray-900 border border-gray-700 rounded-lg py-3 pl-8 pr-4 text-white placeholder-gray-500 transition-colors"
+                                placeholder="Ej. 2000">
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-8 space-y-4">
-                    <button id="btn-secure" class="w-full btn-hover bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center space-x-3">
+                    <button id="btn-secure"
+                        class="w-full btn-hover bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center space-x-3">
                         <i class="fa-solid fa-lock"></i>
                         <span>Evaluar con Lattigo (Seguro)</span>
                         <div id="spinner-secure" class="spinner hidden"></div>
                     </button>
-                    
-                    <button id="btn-insecure" class="w-full btn-hover btn-danger bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center space-x-3">
+
+                    <button id="btn-insecure"
+                        class="w-full btn-hover btn-danger bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center space-x-3">
                         <i class="fa-solid fa-unlock"></i>
                         <span>Evaluar Plano (Inseguro)</span>
                         <div id="spinner-insecure" class="spinner hidden"></div>
@@ -185,28 +203,34 @@
 
         <!-- Right Column: Logs & Metrics -->
         <div class="lg:col-span-7 flex flex-col space-y-6">
-            
+
             <!-- Network Logs -->
             <div class="glass rounded-2xl flex flex-col flex-grow overflow-hidden h-[360px]">
                 <div class="bg-gray-900 px-5 py-3 border-b border-gray-800 flex justify-between items-center">
-                    <span class="text-sm font-semibold text-gray-300"><i class="fa-solid fa-network-wired mr-2"></i> Logs de Red (Tráfico Simulado)</span>
-                    <button id="clear-logs" class="text-xs text-gray-500 hover:text-white transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    <span class="text-sm font-semibold text-gray-300"><i class="fa-solid fa-network-wired mr-2"></i>
+                        Logs de Red (Tráfico Simulado)</span>
+                    <button id="clear-logs" class="text-xs text-gray-500 hover:text-white transition-colors"><i
+                            class="fa-solid fa-trash"></i></button>
                 </div>
-                <div id="log-container" class="log-console p-5 flex-grow text-xs sm:text-sm leading-relaxed tracking-tight">
+                <div id="log-container"
+                    class="log-console p-5 flex-grow text-xs sm:text-sm leading-relaxed tracking-tight">
                     <div class="text-gray-500">> Sistema iniciado. Esperando transacciones...</div>
                 </div>
             </div>
 
             <!-- Comparativa Results -->
             <div class="glass rounded-2xl p-6">
-                <h2 class="text-lg font-semibold mb-4 text-gray-200"><i class="fa-solid fa-chart-line mr-2"></i> Monitor de Rendimiento</h2>
-                
+                <h2 class="text-lg font-semibold mb-4 text-gray-200"><i class="fa-solid fa-chart-line mr-2"></i> Monitor
+                    de Rendimiento</h2>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    
+
                     <!-- Secure Stats -->
                     <div class="bg-gray-900 border border-indigo-900/50 rounded-xl p-4 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-2"><i class="fa-solid fa-shield-check text-indigo-500 opacity-20 text-4xl"></i></div>
-                        <h4 class="text-indigo-400 font-semibold mb-3 flex items-center"><i class="fa-solid fa-lock mr-2"></i> Lattigo (Seguro)</h4>
+                        <div class="absolute top-0 right-0 p-2"><i
+                                class="fa-solid fa-shield-check text-indigo-500 opacity-20 text-4xl"></i></div>
+                        <h4 class="text-indigo-400 font-semibold mb-3 flex items-center"><i
+                                class="fa-solid fa-lock mr-2"></i> Lattigo (Seguro)</h4>
                         <div class="space-y-2">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-400">Tiempo de Respuesta:</span>
@@ -221,8 +245,10 @@
 
                     <!-- Insecure Stats -->
                     <div class="bg-gray-900 border border-red-900/50 rounded-xl p-4 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-2"><i class="fa-solid fa-bug text-red-500 opacity-20 text-4xl"></i></div>
-                        <h4 class="text-red-400 font-semibold mb-3 flex items-center"><i class="fa-solid fa-unlock mr-2"></i> Plano (Inseguro)</h4>
+                        <div class="absolute top-0 right-0 p-2"><i
+                                class="fa-solid fa-bug text-red-500 opacity-20 text-4xl"></i></div>
+                        <h4 class="text-red-400 font-semibold mb-3 flex items-center"><i
+                                class="fa-solid fa-unlock mr-2"></i> Plano (Inseguro)</h4>
                         <div class="space-y-2">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-400">Tiempo de Respuesta:</span>
@@ -244,7 +270,8 @@
 
     <!-- Footer -->
     <footer class="mt-12 text-center text-sm text-gray-600 pb-6 w-full relative z-10">
-        Construido con <i class="fa-solid fa-heart text-red-500 mx-1"></i> y Tailwind CSS. Dashboard para Evaluación de Riesgo.
+        Construido con <i class="fa-solid fa-heart text-red-500 mx-1"></i> y Tailwind CSS. Dashboard para Evaluación de
+        Riesgo.
     </footer>
 
     <!-- JavaScript Logic -->
@@ -264,7 +291,7 @@
             const entry = document.createElement("div");
             entry.className = "mb-1";
             let colorClass = "text-green-400";
-            
+
             if (message.includes("Error") || message.includes("Falló")) {
                 colorClass = "text-red-400";
             } else if (message.includes("Ciphertext")) {
@@ -300,7 +327,7 @@
             const { income, debt } = getInputs();
             const payload = { DataIncome: income, DataDebt: debt };
             const jsonStr = JSON.stringify(payload);
-            
+
             const btn = document.getElementById("btn-insecure");
             const spinner = document.getElementById("spinner-insecure");
             btn.classList.add("opacity-80");
@@ -320,11 +347,11 @@
                 });
 
                 if (!response.ok) throw new Error("Server responded with status " + response.status);
-                
+
                 const data = await response.json();
                 const endTime = performance.now();
                 const latency = (endTime - startTime).toFixed(2);
-                
+
                 addLog(`Respuesta JSON recibida: <span class="text-gray-300">{"Result": ${data.Result}}</span>`);
                 addLog(`> Latencia: ${latency} ms`);
 
@@ -347,28 +374,28 @@
         // -----------------------------------------------------
         document.getElementById("btn-secure").addEventListener("click", async () => {
             const { income, debt } = getInputs();
-            
+
             const btn = document.getElementById("btn-secure");
             const spinner = document.getElementById("spinner-secure");
             btn.classList.add("opacity-80");
             spinner.classList.remove("hidden");
 
             addLog(`--- Iniciando Evaluación con LattiGO (Seguro) ---`);
-            
+
             // Simular codificación criptográfica visual en la consola
             addLog(`Codificando datos locales...`);
             setTimeout(() => {
                 const fakeCtIncome = generateFakeCiphertext();
                 const fakeCtDebt = generateFakeCiphertext();
-                
+
                 addLog(`Enviando Ciphertext Income: ${fakeCtIncome}`);
                 addLog(`Enviando Ciphertext Debt: ${fakeCtDebt}`);
-                
+
                 const simStartTime = performance.now();
 
                 // Simular el tiempo de latencia y procesamiento en Criptografía Homomórfica (FHE es pesado)
                 const mockDelay = Math.floor(Math.random() * 500) + 1200; // 1.2s - 1.7s delay
-                
+
                 setTimeout(() => {
                     const simEndTime = performance.now();
                     const latency = (mockDelay).toFixed(2); // Usamos mock delay como simulador
@@ -376,13 +403,13 @@
                     // Resultado esperado FHE exacto
                     const expectedResult = (income * 0.4) - (debt * 0.6) + 5.0;
                     const fakeResultCt = generateFakeCiphertext();
-                    
+
                     addLog(`Recibido Ciphertext Resultante: ${fakeResultCt}`);
                     addLog(`Descifrando resultado...`);
 
                     setTimeout(() => {
                         addLog(`> Transacción Completa. Latencia total (incl. cripto): ${latency} ms`);
-                        
+
                         document.getElementById("stat-sec-time").innerText = `${latency} ms`;
                         document.getElementById("stat-sec-result").innerText = expectedResult.toFixed(4);
                         document.getElementById("last-score").innerText = expectedResult.toFixed(2);
@@ -393,10 +420,11 @@
                     }, 300);
 
                 }, mockDelay);
-                
+
             }, 200); // Pequeño delay de la encriptación asíncrona "fake" visual
         });
 
     </script>
 </body>
+
 </html>
