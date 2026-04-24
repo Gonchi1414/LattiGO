@@ -138,21 +138,15 @@ type PlainRequestPayload struct {
 
 // Handler para el modo inseguro
 func evaluateRiskPlainHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
+	var req struct {
+		DataIncome float64 `json:"DataIncome"`
+		DataDebt   float64 `json:"DataDebt"`
 	}
+	json.NewDecoder(r.Body).Decode(&req)
 
-	var req PlainRequestPayload
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Error decodificando JSON", http.StatusBadRequest)
-		return
-	}
+	// El servidor imprime los datos porque PUEDE verlos
+	fmt.Printf("[MODO INSEGURO] Datos recibidos: Ingresos=%.2f, Deuda=%.2f\n", req.DataIncome, req.DataDebt)
 
-	// El servidor VE los datos reales aquí (Inseguro)
-	fmt.Printf("[ALERTA] Procesando datos en claro - Ingresos: %.2f, Deuda: %.2f\n", req.DataIncome, req.DataDebt)
-
-	// Misma lógica matemática pero sin Lattigo
 	result := (req.DataIncome * 0.4) - (req.DataDebt * 0.6) + 5.0
 
 	w.Header().Set("Content-Type", "application/json")
