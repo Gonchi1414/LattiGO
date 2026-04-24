@@ -140,16 +140,16 @@
         <div class="lg:col-span-5 space-y-6">
 
             <div class="glass rounded-2xl p-8">
-                <h2 class="text-xl font-semibold mb-6 text-gray-200 border-b border-gray-700 pb-3">Parámetros del
-                    Cliente</h2>
+                <h2 class="text-xl font-semibold mb-6 text-gray-200 border-b border-gray-700 pb-3">Evaluación de Riesgo
+                    Financiero</h2>
 
                 <div class="space-y-5">
                     <div>
                         <label class="block text-sm font-medium text-gray-400 mb-2" for="income">Ingresos Mensuales
-                            (USD)</label>
+                            (Bolivianos)</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500">$</span>
+                                <span class="text-gray-500">Bs.</span>
                             </div>
                             <input type="number" id="income" value="5000"
                                 class="w-full bg-gray-900 border border-gray-700 rounded-lg py-3 pl-8 pr-4 text-white placeholder-gray-500 transition-colors"
@@ -158,10 +158,11 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2" for="debt">Deuda Total (USD)</label>
+                        <label class="block text-sm font-medium text-gray-400 mb-2" for="debt">Deuda Total
+                            (Bolivianos)</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500">$</span>
+                                <span class="text-gray-500">Bs.</span>
                             </div>
                             <input type="number" id="debt" value="2000"
                                 class="w-full bg-gray-900 border border-gray-700 rounded-lg py-3 pl-8 pr-4 text-white placeholder-gray-500 transition-colors"
@@ -169,7 +170,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="mt-6 p-4 rounded-xl bg-black/40 border border-gray-800 space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Análisis de Pesos
+                        (Fórmula Bancaria)</h3>
 
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 rounded-full bg-brand-success"></div>
+                            <span class="text-sm text-gray-300">Factor Ingreso (x0.4)</span>
+                        </div>
+                        <span id="calc-income" class="text-sm font-mono text-brand-success">+0.00 Bs</span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 rounded-full bg-brand-danger"></div>
+                            <span class="text-sm text-gray-300">Factor Deuda (x0.6)</span>
+                        </div>
+                        <span id="calc-debt" class="text-sm font-mono text-brand-danger">-0.00 Bs</span>
+                    </div>
+
+                    <div class="border-t border-gray-800 pt-2 flex justify-between">
+                        <span class="text-xs text-gray-500">Sesgo de Mercado (b)</span>
+                        <span class="text-xs font-mono text-gray-400">+5.00</span>
+                    </div>
+                </div>
                 <div class="mt-8 space-y-4">
                     <button id="btn-secure"
                         class="w-full btn-hover bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center space-x-3">
@@ -189,9 +214,17 @@
 
             <!-- Mini Results Cards -->
             <div class="grid grid-cols-2 gap-4">
-                <div class="glass rounded-xl p-5 text-center">
+                <!-- <div class="glass rounded-xl p-5 text-center">
                     <h3 class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Último Riesgo</h3>
                     <div id="last-score" class="text-3xl font-bold text-white">--</div>
+                </div> -->
+                <div class="glass rounded-xl p-5 text-center relative overflow-hidden">
+                    <h3 class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Último Riesgo</h3>
+                    <div id="last-score" class="text-3xl font-bold text-white transition-colors duration-500">--</div>
+                    <div id="risk-badge"
+                        class="mt-2 inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter hidden">
+                        --
+                    </div>
                 </div>
                 <div class="glass rounded-xl p-5 text-center">
                     <h3 class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Modo Usado</h3>
@@ -265,6 +298,7 @@
             </div>
 
         </div>
+
 
     </main>
 
@@ -358,7 +392,8 @@
                 // Update UI state
                 document.getElementById("stat-insec-time").innerText = `${latency} ms`;
                 document.getElementById("stat-insec-result").innerText = parseFloat(data.Result).toFixed(4);
-                document.getElementById("last-score").innerText = parseFloat(data.Result).toFixed(2);
+                // document.getElementById("last-score").innerText = parseFloat(data.Result).toFixed(2);
+                updateRiskUI(data.Result);
                 document.getElementById("last-mode").innerHTML = `<span class="text-red-400">Plano (Inseguro)</span>`;
 
             } catch (err) {
@@ -384,7 +419,7 @@
         // -----------------------------------------------------
         document.getElementById("btn-secure").addEventListener("click", async () => {
             const { income, debt } = getInputs();
-            
+
             const btn = document.getElementById("btn-secure");
             const spinner = document.getElementById("spinner-secure");
             btn.classList.add("opacity-80");
@@ -392,14 +427,14 @@
 
             addLog(`--- Iniciando Evaluación con LattiGO (Seguro) ---`);
             addLog(`Codificando datos locales (Simulando paquete FHE)...`);
-            
+
             // Generación de los falsos paquetes cifrados (Base64 largo)
             const fakeCtIncome = generateFakeCiphertext();
             const fakeCtDebt = generateFakeCiphertext();
-            
-            addLog(`Enviando Ciphertext Income: 0x${fakeCtIncome.substring(0,20)}...`);
-            addLog(`Enviando Ciphertext Debt: 0x${fakeCtDebt.substring(0,20)}...`);
-            
+
+            addLog(`Enviando Ciphertext Income: 0x${fakeCtIncome.substring(0, 20)}...`);
+            addLog(`Enviando Ciphertext Debt: 0x${fakeCtDebt.substring(0, 20)}...`);
+
             const payload = {
                 PublicKey: btoa("WEB_DEMO_UI_CALL"),
                 DataIncome: fakeCtIncome,
@@ -417,25 +452,25 @@
                 });
 
                 if (!response.ok) throw new Error("Server responded with status " + response.status);
-                
+
                 const data = await response.json();
-                
+
                 // Forzamos el mock delay en UI solo para aparentar el FHE computation time
                 const mockDelay = Math.floor(Math.random() * 500) + 1200;
-                
+
                 setTimeout(() => {
                     const endTime = performance.now();
                     const latency = (mockDelay).toFixed(2);
-                    
+
                     // Resultado esperado (calculado localmente porque el server mockeó el string)
                     const expectedResult = (income * 0.4) - (debt * 0.6) + 5.0;
-                    
-                    addLog(`Recibido Ciphertext Resultante: 0x${data.Result.substring(0,35)}...`);
+
+                    addLog(`Recibido Ciphertext Resultante: 0x${data.Result.substring(0, 35)}...`);
                     addLog(`Descifrando resultado...`);
-                    
+
                     setTimeout(() => {
                         addLog(`> Transacción Completa. Latencia total (incl. cripto): ${latency} ms`);
-                        
+
                         document.getElementById("stat-sec-time").innerText = `${latency} ms`;
                         document.getElementById("stat-sec-result").innerText = expectedResult.toFixed(4);
                         document.getElementById("last-score").innerText = expectedResult.toFixed(2);
@@ -454,6 +489,47 @@
             }
         });
 
+        // Función para actualizar el análisis visual
+        function updateAnalysis() {
+            const { income, debt } = getInputs();
+
+            const impactIncome = (income * 0.4).toFixed(2);
+            const impactDebt = (debt * 0.6).toFixed(2);
+
+            document.getElementById("calc-income").innerText = `+${impactIncome} Bs`;
+            document.getElementById("calc-debt").innerText = `-${impactDebt} Bs`;
+        }
+
+        // Escuchar cambios en los inputs
+        document.getElementById("income").addEventListener("input", updateAnalysis);
+        document.getElementById("debt").addEventListener("input", updateAnalysis);
+
+        // Ejecutar una vez al cargar para inicializar con 5000 y 2000
+        updateAnalysis();
+        function updateRiskUI(score) {
+            const scoreEl = document.getElementById("last-score");
+            const badgeEl = document.getElementById("risk-badge");
+
+            badgeEl.classList.remove("hidden");
+            scoreEl.innerText = parseFloat(score).toFixed(2);
+
+            if (score < 100) {
+                // RIESGO CRÍTICO
+                scoreEl.className = "text-3xl font-bold text-red-500";
+                badgeEl.className = "mt-2 inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-red-500/20 text-red-500 border border-red-500/50";
+                badgeEl.innerText = "🔴 Riesgo Crítico (Rechazado)";
+            } else if (score >= 100 && score <= 500) {
+                // RIESGO MODERADO
+                scoreEl.className = "text-3xl font-bold text-yellow-500";
+                badgeEl.className = "mt-2 inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-yellow-500/20 text-yellow-500 border border-yellow-500/50";
+                badgeEl.innerText = "🟡 Riesgo Moderado (Garantía)";
+            } else {
+                // SOLVENTE
+                scoreEl.className = "text-3xl font-bold text-green-500";
+                badgeEl.className = "mt-2 inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-green-500/20 text-green-500 border border-green-500/50";
+                badgeEl.innerText = "🟢 Solvente (Aprobado)";
+            }
+        }
     </script>
 </body>
 
