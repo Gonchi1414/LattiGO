@@ -4,6 +4,8 @@
 ![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 
+![Diagrama de Arquitectura](public/diagram.png)
+
 Un dashboard de evaluación de riesgo financiero diseñado para demostrar la diferencia extrema entre **transmitir datos en texto plano** y utilizar **Cifrado Homomórfico (FHE)**. 
 
 Este proyecto fue estructurado especialmente para analizar capturas de red (por ejemplo, con **Wireshark**) y demostrar cómo el cifrado homomórfico, mediante la librería Lattigo, protege los datos analíticos mientras se computan en el lado del servidor sin llegar a ser descifrados en el backend.
