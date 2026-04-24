@@ -153,11 +153,27 @@ func evaluateRiskPlainHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]float64{"Result": result})
 }
 
+// Middleware para habilitar CORS
+func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next(w, r)
+	}
+}
+
 func main() {
-	// endpoint seguro
-	http.HandleFunc("/evaluate-risk", evaluateRiskHandler)
-	// endpoint inseguro
-	http.HandleFunc("/evaluate-risk-plain", evaluateRiskPlainHandler)
+	// endpoint seguro con CORS
+	http.HandleFunc("/evaluate-risk", corsMiddleware(evaluateRiskHandler))
+	// endpoint inseguro con CORS
+	http.HandleFunc("/evaluate-risk-plain", corsMiddleware(evaluateRiskPlainHandler))
 
 	fmt.Println("=== Servidor de IA (Equipo B) Iniciado ===")
 	fmt.Println("Escuchando en http://localhost:8080/evaluate-risk")

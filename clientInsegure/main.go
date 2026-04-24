@@ -24,13 +24,13 @@ func main() {
 	fmt.Println("=== Iniciando Equipo A (Cliente MODO INSEGURO) ===")
 
 	// Datos de prueba
-	income := 5000.0
+	income := 456198000.0
 	debt := 2000.0
 
 	fmt.Printf("\nDatos del Cliente a enviar en CLARO:\n  Ingresos: %.2f\n  Deuda: %.2f\n", income, debt)
 
 	// URL del servidor (Cambia localhost por la IP de la Laptop B si usas dos equipos)
-	serverURL := "http://localhost:8080/evaluate-risk-plain"
+	serverURL := "http://192.168.0.12:8080/evaluate-risk-plain"
 
 	start := time.Now()
 

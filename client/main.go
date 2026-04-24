@@ -115,7 +115,7 @@ func evaluateEncrypted(income, debt float64, encoder *ckks.Encoder, encryptor *r
 	// 3. Envío al Servidor
 	fmt.Println("[+] Enviando datos cifrados al servidor (POST /evaluate-risk)...")
 	netStart := time.Now()
-	resp, err := http.Post("http://localhost:8080/evaluate-risk", "application/json", bytes.NewBuffer(reqBody))
+	resp, err := http.Post("http://192.168.0.12:8080/evaluate-risk", "application/json", bytes.NewBuffer(reqBody))
 	if err != nil {
 		log.Fatalf("Error conectando con el servidor (¿Está el Equipo B corriendo?): %v", err)
 	}
@@ -185,7 +185,7 @@ func evaluatePlain(income, debt float64) {
 	fmt.Println("[+] Enviando datos en texto plano al servidor imaginario...")
 	netStart := time.Now()
 	// Intentamos pegarle a un endpoint texto plano, aunque es imaginario
-	resp, err := http.Post("http://localhost:8080/evaluate-risk-plain", "application/json", bytes.NewBuffer(reqBody))
+	resp, err := http.Post("http://192.168.0.12:8080/evaluate-risk-plain", "application/json", bytes.NewBuffer(reqBody))
 	if err != nil || resp.StatusCode != http.StatusOK {
 		fmt.Printf("Servidor no tiene endpoint de texto plano (simulando localmente)...\n")
 		// Simular el tiempo de latencia de red y cálculo rápido
