@@ -42,6 +42,14 @@ func init() {
 
 // evaluateRiskHandler procesa el riesgo calculando: (Income * 0.4) - (Debt * 0.6) + 5.0
 func evaluateRiskHandler(w http.ResponseWriter, r *http.Request) {
+	// Prevenir que un panic cierre la conexión TCP abruptamente
+	defer func() {
+		if rec := recover(); rec != nil {
+			log.Printf("Panic interceptado en evaluateRiskHandler: %v", rec)
+			http.Error(w, "Error interno procesando FHE (Panic)", http.StatusInternalServerError)
+		}
+	}()
+
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -55,7 +63,8 @@ func evaluateRiskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// FALLBACK: Si es la Demo de la Interfaz Web (viene con una PublicKey específica para evitar Panics de Unmarshal)
-	if req.PublicKey == "V0VCX0RFTU9fVUlfQ0FMTA==" {
+	// Comparamos contra la versión nueva o la versión en caché del usuario (FAKE_PUBLIC_KEY).
+	if req.PublicKey == "V0VCX0RFTU9fVUlfQ0FMTA==" || req.PublicKey == "RkFLRV9QVUJMSUNfS0VZWg==" {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(ResponsePayload{
 			Result: base64.StdEncoding.EncodeToString([]byte("MOCK_FHE_CIPHERTEXT_RESPONSE_FOR_WIRESHARK_DEMO_0x4f2a...")),
