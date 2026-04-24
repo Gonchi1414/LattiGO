@@ -130,13 +130,44 @@ func evaluateRiskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Estructura para datos sin cifrar
+type PlainRequestPayload struct {
+	DataIncome float64 `json:"DataIncome"`
+	DataDebt   float64 `json:"DataDebt"`
+}
+
+// Handler para el modo inseguro
+func evaluateRiskPlainHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req PlainRequestPayload
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Error decodificando JSON", http.StatusBadRequest)
+		return
+	}
+
+	// El servidor VE los datos reales aquí (Inseguro)
+	fmt.Printf("[ALERTA] Procesando datos en claro - Ingresos: %.2f, Deuda: %.2f\n", req.DataIncome, req.DataDebt)
+
+	// Misma lógica matemática pero sin Lattigo
+	result := (req.DataIncome * 0.4) - (req.DataDebt * 0.6) + 5.0
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]float64{"Result": result})
+}
+
 func main() {
-	// Configurar endpoint
+	// endpoint seguro
 	http.HandleFunc("/evaluate-risk", evaluateRiskHandler)
+	// endpoint inseguro
+	http.HandleFunc("/evaluate-risk-plain", evaluateRiskPlainHandler)
 
 	fmt.Println("=== Servidor de IA (Equipo B) Iniciado ===")
 	fmt.Println("Escuchando en http://localhost:8080/evaluate-risk")
-	
+
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatalf("Error en el servidor: %v", err)
 	}
